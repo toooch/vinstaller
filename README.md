@@ -29,6 +29,7 @@ For the main vinstaller.exe:
 1. Download [vinstaller.py](src/vinstaller.py) and [updater.py](src/updater.py)
 2. Pack both Python files using [pyinstaller](https://pypi.org/project/pyinstaller/)
 3. Upload the exe formed from updater.py to a web location accesible to be downloaded from using [requests](https://pypi.org/project/pyinstaller/)
+
 Note: you might need to install some dependencies on your machine in order to package the files.
 
 ## Contact
