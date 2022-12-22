@@ -27,7 +27,7 @@ In the Injection Options screen, you can inject the auto-updater into your Valhe
 In case you're unsure regarding the security of the programs, you can build them yourself.
 For the main vinstaller.exe:
 1. Download [vinstaller.py](src/vinstaller.py) and [updater.py](src/updater.py)
-2. Pack both Python files using [pyinstaller](https://pypi.org/project/pyinstaller/)
+2. Pack both Python files using [pyinstaller](https://pypi.org/project/pyinstaller/), it is recommended to generate only the executable with the `--onefile` argument
 3. Upload the exe formed from updater.py to a web location accesible to be downloaded from using [requests](https://pypi.org/project/pyinstaller/)
 
 Note: you might need to install some dependencies on your machine in order to package the files.
