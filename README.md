@@ -3,6 +3,13 @@
 vinstaller makes it super easy to keep your Valheim+ up-to-date!
 Installing the latest version is possible from the main program, however automatic updating can be enabled by injecting the auto-updater into your Valheim installation.
 
+## Features
+- Update your Valheim+ with one click
+- Install an auto-updater to keep your Valheim+ up-to-date at all times
+- (WIP) Client-side plugin management
+- (WIP) Easy plugin management depending on the server's plugins
+- (WIP) Valheim+ version selector
+
 ## How to use
 Download vinstaller.exe from the latest release or by clicking [here](https://github.com/toooch/vinstaller/releases/latest/download/updater.exe), or [build it yourself](#how-to-build)
 
