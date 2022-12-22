@@ -23,7 +23,7 @@ In the Injection Options screen, you can inject the auto-updater into your Valhe
 - [ ] Multiple version select
 - [ ] Additional plugin manager
 
-## How to build
+##How to build
 In case you're unsure regarding the security of the programs, you can build them yourself.
 For the main vinstaller.exe:
 1. Download [vinstaller.py](src/vinstaller.py) and [updater.py](src/updater.py)
