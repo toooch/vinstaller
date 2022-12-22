@@ -4,7 +4,7 @@ vinstaller makes it super easy to keep your Valheim+ up-to-date!
 Installing the latest version is possible from the main program, however automatic updating can be enabled by injecting the auto-updater into your Valheim installation.
 
 ## How to use
-Download vinstaller.exe from the latest release or by clicking [here](https://github.com/toooch/vinstaller/releases/latest/download/updater.exe), or [build it yourself](##-how-to-build)
+Download vinstaller.exe from the latest release or by clicking [here](https://github.com/toooch/vinstaller/releases/latest/download/updater.exe), or [build it yourself](##how-to-build)
 
 In the upper part of the main screen, specify the path of you Valheim installation. If there is no Valheim instance found in this directory, the program will display an error message.
 In the lower part, the download link to the latest Valheim+ release is displayed. This cannot be altered.
