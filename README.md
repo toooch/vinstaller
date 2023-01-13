@@ -6,8 +6,8 @@ Installing the latest version is possible from the main program, however automat
 ## Features
 - Update your Valheim+ with one click
 - Install an auto-updater to keep your Valheim+ up-to-date at all times
-- (WIP) Client-side plugin management
-- (WIP) Easy plugin management depending on the server's plugins
+- Client-side plugin management
+- Easy plugin management depending on the server's plugins
 - (WIP) Valheim+ version selector
 
 ## How to use
@@ -27,8 +27,8 @@ In the Injection Options screen, you can inject the auto-updater into your Valhe
 - [x] Manual installation of the latest version
 - [x] Standalone auto-updater
 - [x] Injection of the auto-updater
+- [x] Additional plugin manager
 - [ ] Multiple version select
-- [ ] Additional plugin manager
 
 ## How to build
 In case you're unsure regarding the security of the programs, you can build them yourself.
