@@ -14,19 +14,22 @@ Other plugins can easily be managed using the Plugin Manager.
 ## How to use
 Download vinstaller.exe from the latest release or by clicking [here](https://github.com/toooch/vinstaller/releases/latest/download/updater.exe), or [build it yourself](#how-to-build)
 
+### Main Installer
 In the upper part of the main screen, specify the path of you Valheim installation. If there is no Valheim instance found in this directory, the program will display an error message.
 In the lower part, the download link to the latest Valheim+ release is displayed. This cannot be altered.
 The submit button will start the installation of the latest Valheim+ release.
 
 ![The Main Installer page](https://media.discordapp.net/attachments/629610955906744349/1055207142963023892/image.png)
 
+### Plugin Manager
+In the Plugin Manager screen, you can select supported plugins to install or remove from your installation location. The [list of supported plugins](#supported-plugins) will grow over time and will auto-update every time you start vinstaller
+
+![The Plugin Manager page](https://media.discordapp.net/attachments/629610955906744349/1063576661003604049/image.png)
+
+### Injection Options
 In the Injection Options screen, you can inject the auto-updater into your Valheim installation. This still needs you to specify the path in the main screen. The updater will run every time you start the game and install the latest update if it is not installed yet.
 
 ![The Injection Options page](https://media.discordapp.net/attachments/629610955906744349/1055210493482119228/image.png)
-
-In the Plugin Manager screen, you can select supported plugins to install or remove from your installation location. The list of supported plugins will grow over time and will auto-update every time you start vinstaller
-
-![The Plugin Manager page](https://media.discordapp.net/attachments/629610955906744349/1063576661003604049/image.png)
 
 ## Supported plugins
 - [Jötunn, the Valheim Library](https://www.nexusmods.com/valheim/mods/1138)
