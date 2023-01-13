@@ -9,21 +9,27 @@ from tkinter import filedialog, ttk
 from tkinter import messagebox as mbx
 from tkinter import *
 import os
+from os import listdir, path
+from os.path import isfile, join
 import requests
 import zipfile
-import sys
 
 
 class BaseGUI:
     def __init__(self):
-        self.URL_latest = 'https://github.com/valheimPlus/ValheimPlus/releases/latest/download/WindowsClient.zip'
-
         """Main stuff"""
         # Main window
         self.root = tkinter.Tk()
         self.root.title('Valheim+ Installer')
+        # self.root.wm_iconbitmap('vplus.ico')
         self.root.resizable(False, False)
         self.opened = False
+
+        self.URL_latest = 'https://github.com/valheimPlus/ValheimPlus/releases/latest/download/WindowsClient.zip'
+        self.installed_plugins = None
+        self.download_supported_plugins()
+        self.plugins = []
+        self.get_supported_plugins()
 
         # Tab Control
         self.tab_control = ttk.Notebook(self.root, width=400, height=300)
@@ -116,11 +122,149 @@ class BaseGUI:
                                 command=self.uninstall_updater)
         self.un_button.grid(row=2, column=0, pady=10)
 
+        """Plugin Manager"""
+        self.frame_pm_main = Frame(self.plugins_tab, width=400)
+        self.frame_pm_main.grid(row=0, column=0)
+
+        # Plugin Selector
+        # Frame
+        self.frame_pm_selector = Frame(self.frame_pm_main, width=180, height=380)
+        self.frame_pm_selector.grid(row=0, column=0, padx=10, pady=10)
+        self.frame_pm_selector.grid_propagate(False)
+
+        # List of available plugins
+        self.label_available_plugins = Label(self.frame_pm_selector, text='Available plugins:')
+        self.label_available_plugins.grid(row=0, column=0)
+        self.frame_available_plugins = Frame(self.frame_pm_selector)
+        self.frame_available_plugins.grid(row=1, column=0)
+
+        Label(self.frame_pm_selector, text=' ').grid(row=2, column=0)
+
+        # List of installed plugins
+        self.label_installed_plugins = Label(self.frame_pm_selector, text='Installed plugins:')
+        self.label_installed_plugins.grid(row=3, column=0)
+        self.btn_installed_plugins = Button(self.frame_pm_selector, text='Load installed plugins',
+                                            command=self.exec_load_installed_plugins)
+        self.btn_installed_plugins.grid(row=4, column=0)
+        self.frame_installed_plugins = Frame(self.frame_pm_selector)
+        self.frame_installed_plugins.grid(row=5, column=0, sticky=W)
+
+        # SEPARATOR
+        ttk.Separator(self.plugins_tab, orient=VERTICAL).place(relx=0.5, y=20, height=260)
+
+        # Plugin controller
+        # Frame
+        self.frame_pm_controller = Frame(self.frame_pm_main, width=180, height=380)
+        self.frame_pm_controller.grid(row=0, column=1, padx=10, pady=10)
+        self.frame_pm_controller.grid_propagate(False)
+
+        # Install selected
+        self.b_install_selected = Button(self.frame_pm_controller, text='Install Selected',
+                                         command=self.exec_install_selected)
+        self.b_install_selected.grid(row=0, column=0, pady=2.5)
+
+        # Remove selected
+        self.b_remove_selected = Button(self.frame_pm_controller, text='Remove Selected',
+                                        command=self.exec_remove_selected)
+        self.b_remove_selected.grid(row=1, column=0, pady=2.5)
+
+        # Update supported plugins
+        self.b_update_supported = Button(self.frame_pm_controller, text='Update Supported Plugins',
+                                         command=self.download_supported_plugins)
+        self.b_update_supported.grid(row=2, column=0, pady=2.5)
+
         """Background of window"""
         self.tab_control.grid(row=0, column=0)
         self.tab_control.grid_propagate(False)
         self.main_frame_main.pack(padx=20, pady=20)
+        self.exec_load_available_plugins()
         self.root.mainloop()
+
+    def exec_remove_selected(self):
+        if self.check_dir(self.path_entry.get()):
+            faults = []
+            for plugin in self.installed_plugins:
+                plugin_path = f"{self.path_entry.get()}/BepInEx/plugins/{plugin[0]}.dll"
+                if plugin[1].get() is True:
+                    if path.exists(plugin_path):
+                        try:
+                            os.remove(plugin_path)
+                        except Exception as e:
+                            print(e)
+                            faults.append(plugin[0])
+                    else:
+                        faults.append(f'{plugin[0]} (file not found)')
+            if len(faults) == 0:
+                mbx.showinfo('Success', 'All selected plugins have been removed.')
+            else:
+                nl = '\n'
+                mbx.showerror('Failure', f'Some ({len(faults)}) plugins have not been removed:\n{nl.join(faults)}')
+            self.exec_load_installed_plugins()
+        else:
+            mbx.showerror('Incorrect path',
+                          'The installation path entered does not contain a Valheim installation.')
+
+    def exec_install_selected(self):
+        if self.check_dir(self.path_entry.get()):
+            faults = []
+            for plugin in self.plugins:
+                plugin_path = f"{self.path_entry.get()}/BepInEx/plugins/{path.basename(plugin['url'])}"
+                if plugin['check'].get() is True:
+                    if self.download(plugin['url'], plugin_path):
+                        continue
+                    else:
+                        faults.append(plugin['name'])
+            if len(faults) == 0:
+                mbx.showinfo('Success', 'All plugins have been installed.')
+            else:
+                nl = '\n'
+                mbx.showerror('Failure', f'Some ({len(faults)}) plugins have not been installed:\n{nl.join(faults)}')
+            self.exec_load_installed_plugins()
+        else:
+            mbx.showerror('Incorrect path',
+                          'The installation path entered does not contain a Valheim installation.')
+
+    def exec_load_installed_plugins(self):
+        # Check valheim installation
+        if self.check_dir(self.path_entry.get()):
+            # Update our list of installed plugins
+            plugins_path = f"{self.path_entry.get()}/BepInEx/plugins"
+            self.installed_plugins = []
+            for file in listdir(plugins_path):
+                if isfile(join(plugins_path, file)):
+                    self.installed_plugins.append([file.split('.')[0], BooleanVar()])
+
+            # Sort plugins
+            self.installed_plugins.sort()
+
+            # Clear frame
+            for widget in self.frame_installed_plugins.winfo_children():
+                widget.destroy()
+
+            # Put plugin names in frame
+            counter = 0
+            for plugin in self.installed_plugins:
+                if plugin[0] == 'ValheimPlus':
+                    continue
+                else:
+                    Checkbutton(self.frame_installed_plugins, text=plugin[0],
+                                variable=plugin[1], onvalue=True, offvalue=False).grid(row=counter, column=0, sticky=W)
+                    counter += 1
+            self.btn_installed_plugins.grid_forget()
+        else:
+            mbx.showerror('Incorrect path',
+                          'The installation path entered does not contain a Valheim installation.')
+
+    def exec_load_available_plugins(self):
+        # Sort plugins
+        self.plugins = sorted(self.plugins, key=lambda l: l['name'])
+
+        # Put them in frame
+        counter = 0
+        for plugin in self.plugins:
+            Checkbutton(self.frame_available_plugins, text=plugin['name'],
+                        variable=plugin['check'], onvalue=True, offvalue=False).grid(row=counter, column=0, sticky=W)
+            counter += 1
 
     @staticmethod
     def text_changer(tb, text):
@@ -132,7 +276,7 @@ class BaseGUI:
     def run_injector(self):
         path_ = self.path_entry.get()
         if self.check_dir(path_):
-            if os.path.exists(path_ + '/valheim_Data'):
+            if path.exists(path_ + '/valheim_Data'):
                 # normal injection
                 # rename valheim.exe
                 os.rename(path_ + '/valheim.exe', path_ + '/valheim_game.exe')
@@ -171,16 +315,16 @@ class BaseGUI:
         self.path_name.set(path_dialog)
 
     @staticmethod
-    def check_dir(path):
-        if os.path.exists(path) and os.path.exists(path + '/valheim.exe') and os.path.exists(path + '/steam_appid.txt'):
-            print('Valid valheim installation folder')
+    def check_dir(check_path):
+        if os.path.exists(check_path) and os.path.exists(check_path + '/valheim.exe') and \
+                os.path.exists(check_path + '/steam_appid.txt'):
             return True
         else:
             return False
 
     def run_installer(self):
         if self.check_dir(self.path_entry.get()):
-            if self.download():
+            if self.download(self.URL_latest, self.path_entry.get() + '/WindowsClient.zip'):
                 mbx.showinfo('Success', 'File downloaded succesfully')
                 self.unzip()
                 os.remove(self.path_entry.get() + '/WindowsClient.zip')
@@ -191,10 +335,11 @@ class BaseGUI:
                           'The installation path entered does not contain a Valheim installation.')
             return False
 
-    def download(self):
+    @staticmethod
+    def download(url, path_put):
         try:
-            response = requests.get(self.URL_latest)
-            with open(self.path_entry.get() + '/WindowsClient.zip', 'wb') as file:
+            response = requests.get(url)
+            with open(path_put, 'wb') as file:
                 file.write(response.content)
         except:
             return False
@@ -203,6 +348,28 @@ class BaseGUI:
     def unzip(self):
         with zipfile.ZipFile(self.path_entry.get() + '/WindowsClient.zip', 'r') as zip_ref:
             zip_ref.extractall(self.path_entry.get())
+
+    def get_supported_plugins(self):
+        self.plugins = []
+        with open('supported_plugins.vinstaller') as file:
+            for line in file:
+                part = line.replace('\n', '').split(',')
+                if len(part) > 2:
+                    self.plugins.append({'name': part[0], 'url': part[1], 'dep': part[2].split(';'),
+                                         'check': BooleanVar()})
+                else:
+                    self.plugins.append({'name': part[0], 'url': part[1], 'dep': [],
+                                         'check': BooleanVar()})
+
+    @staticmethod
+    def download_supported_plugins():
+        url = 'https://raw.githubusercontent.com/toooch/vinstaller/main/src/supported_plugins.vinstaller'
+        try:
+            response = requests.get(url)
+            with open('supported_plugins.vinstaller', 'wb') as file:
+                file.write(response.content)
+        except:
+            pass
 
 
 base = BaseGUI()
