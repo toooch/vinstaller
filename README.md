@@ -32,7 +32,7 @@ In the Injection Options screen, you can inject the auto-updater into your Valhe
 ![The Injection Options page](https://media.discordapp.net/attachments/629610955906744349/1055210493482119228/image.png)
 
 ## Supported plugins
-You can [create an Issue](https://github.com/toooch/vinstaller/issues/new) to suggest plugins to be added to this list
+You can [create an Issue](https://github.com/toooch/vinstaller/issues/new) to suggest plugins to be added to this list #New plugin
 - [Jötunn, the Valheim Library](https://www.nexusmods.com/valheim/mods/1138)
 - [ValheimRAFT](https://www.nexusmods.com/valheim/mods/1136)
 - [FarmGrid](https://www.nexusmods.com/valheim/mods/449)
