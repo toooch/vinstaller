@@ -2,6 +2,7 @@
 
 vinstaller makes it super easy to keep your Valheim+ up-to-date!
 Installing the latest version is possible from the main program, however automatic updating can be enabled by injecting the auto-updater into your Valheim installation.
+Other plugins can easily be managed using the Plugin Manager.
 
 ## Features
 - Update your Valheim+ with one click
@@ -22,6 +23,15 @@ The submit button will start the installation of the latest Valheim+ release.
 In the Injection Options screen, you can inject the auto-updater into your Valheim installation. This still needs you to specify the path in the main screen. The updater will run every time you start the game and install the latest update if it is not installed yet.
 
 ![The Injection Options page](https://media.discordapp.net/attachments/629610955906744349/1055210493482119228/image.png)
+
+In the Plugin Manager screen, you can select supported plugins to install or remove from your installation location. The list of supported plugins will grow over time and will auto-update every time you start vinstaller
+
+![The Plugin Manager page](https://media.discordapp.net/attachments/629610955906744349/1063576661003604049/image.png)
+
+## Supported plugins
+- [Jötunn, the Valheim Library](https://www.nexusmods.com/valheim/mods/1138)
+- [ValheimRAFT](https://www.nexusmods.com/valheim/mods/1136)
+- [FarmGrid](https://www.nexusmods.com/valheim/mods/449)
 
 ## State of the program
 - [x] Manual installation of the latest version
