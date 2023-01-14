@@ -12,7 +12,7 @@ Other plugins can easily be managed using the Plugin Manager.
 - (WIP) Valheim+ version selector
 
 ## How to use
-Download vinstaller.exe from the latest release or by clicking [here](https://github.com/toooch/vinstaller/releases/latest/download/updater.exe), or [build it yourself](#how-to-build)
+Download the [installer](https://github.com/toooch/vinstaller/releases/latest/download/vinstaller_setup.exe) (recommended), [standalone version](https://github.com/toooch/vinstaller/releases/latest/download/vinstaller.exe) or [build it yourself](#how-to-build)
 
 ### Main Installer
 In the upper part of the main screen, specify the path of you Valheim installation. If there is no Valheim instance found in this directory, the program will display an error message.
