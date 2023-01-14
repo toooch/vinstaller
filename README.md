@@ -1,7 +1,5 @@
 # vinstaller
 
-USE v0.0.1 FOR NOW, v0.0.2 WILL BE FIXED ASAP
-
 vinstaller makes it super easy to keep your Valheim+ up-to-date!
 Installing the latest version is possible from the main program, however automatic updating can be enabled by injecting the auto-updater into your Valheim installation.
 Other plugins can easily be managed using the Plugin Manager.
