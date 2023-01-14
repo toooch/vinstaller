@@ -26,6 +26,7 @@ class BaseGUI:
         self.opened = False
 
         self.URL_latest = 'https://github.com/valheimPlus/ValheimPlus/releases/latest/download/WindowsClient.zip'
+        self.install_location = ''
         self.installed_plugins = None
         self.download_supported_plugins()
         self.plugins = []
@@ -60,10 +61,12 @@ class BaseGUI:
         self.path_label.grid(row=1, column=0)
 
         # # Path dialog
-        self.path_name = tkinter.StringVar()
+        self.path_name = StringVar()
+        self.get_install_path()
+        self.path_name.set(self.install_location)
+        self.path_name.trace('w', lambda name, index, mode, sv=self.path_name: self.set_install_path())
         self.path_entry = Entry(self.main_frame_path, textvariable=self.path_name,
                                 width=55)
-        self.path_name.set('C:/Program Files (x86)/Steam/steamapps/common/Valheim')
         self.path_entry.grid(row=2, column=0)
 
         self.browse_button = Button(self.main_frame_path, text="Browse",
@@ -181,10 +184,10 @@ class BaseGUI:
         self.root.mainloop()
 
     def exec_remove_selected(self):
-        if self.check_dir(self.path_entry.get()):
+        if self.check_dir(self.install_location):
             faults = []
             for plugin in self.installed_plugins:
-                plugin_path = f"{self.path_entry.get()}/BepInEx/plugins/{plugin[0]}.dll"
+                plugin_path = f"{self.install_location}/BepInEx/plugins/{plugin[0]}.dll"
                 if plugin[1].get() is True:
                     if path.exists(plugin_path):
                         try:
@@ -205,10 +208,10 @@ class BaseGUI:
                           'The installation path entered does not contain a Valheim installation.')
 
     def exec_install_selected(self):
-        if self.check_dir(self.path_entry.get()):
+        if self.check_dir(self.install_location):
             faults = []
             for plugin in self.plugins:
-                plugin_path = f"{self.path_entry.get()}/BepInEx/plugins/{path.basename(plugin['url'])}"
+                plugin_path = f"{self.install_location}/BepInEx/plugins/{path.basename(plugin['url'])}"
                 if plugin['check'].get() is True:
                     if self.download(plugin['url'], plugin_path):
                         continue
@@ -226,9 +229,9 @@ class BaseGUI:
 
     def exec_load_installed_plugins(self):
         # Check valheim installation
-        if self.check_dir(self.path_entry.get()):
+        if self.check_dir(self.install_location):
             # Update our list of installed plugins
-            plugins_path = f"{self.path_entry.get()}/BepInEx/plugins"
+            plugins_path = f"{self.install_location}/BepInEx/plugins"
             self.installed_plugins = []
             for file in listdir(plugins_path):
                 if isfile(join(plugins_path, file)):
@@ -274,7 +277,7 @@ class BaseGUI:
         tb.see(END)
 
     def run_injector(self):
-        path_ = self.path_entry.get()
+        path_ = self.install_location
         if self.check_dir(path_):
             if path.exists(path_ + '/valheim_Data'):
                 # normal injection
@@ -296,7 +299,7 @@ class BaseGUI:
                           'Specify a valid location before running the injector')
 
     def uninstall_updater(self):
-        path_ = self.path_entry.get()
+        path_ = self.install_location
         if self.check_dir(path_):
             if os.path.exists(path_ + '/valheim_game_Data') and os.path.exists(path_ + '/valheim_game.exe'):
                 # normal uninstall
@@ -323,11 +326,11 @@ class BaseGUI:
             return False
 
     def run_installer(self):
-        if self.check_dir(self.path_entry.get()):
-            if self.download(self.URL_latest, self.path_entry.get() + '/WindowsClient.zip'):
+        if self.check_dir(self.install_location):
+            if self.download(self.URL_latest, self.install_location + '/WindowsClient.zip'):
                 mbx.showinfo('Success', 'File downloaded succesfully')
                 self.unzip()
-                os.remove(self.path_entry.get() + '/WindowsClient.zip')
+                os.remove(self.install_location + '/WindowsClient.zip')
                 return True
         else:
             self.submit_text.set('Error')
@@ -346,8 +349,8 @@ class BaseGUI:
         return True
 
     def unzip(self):
-        with zipfile.ZipFile(self.path_entry.get() + '/WindowsClient.zip', 'r') as zip_ref:
-            zip_ref.extractall(self.path_entry.get())
+        with zipfile.ZipFile(self.install_location + '/WindowsClient.zip', 'r') as zip_ref:
+            zip_ref.extractall(self.install_location)
 
     def get_supported_plugins(self):
         self.plugins = []
@@ -370,6 +373,21 @@ class BaseGUI:
                 file.write(response.content)
         except:
             pass
+
+    def get_install_path(self):
+        try:
+            with open('vinstaller.cfg') as cfg:
+                self.install_location = cfg.readline().replace('\n', '')
+        except:
+            with open('vinstaller.cfg', 'w') as cfg:
+                cfg.write('C:/Program Files (x86)/Steam/steamapps/common/Valheim')
+            self.install_location = 'C:/Program Files (x86)/Steam/steamapps/common/Valheim'
+
+    def set_install_path(self):
+        new_path = self.path_entry.get()
+        with open('vinstaller.cfg', 'w') as cfg:
+            cfg.write(new_path)
+        self.install_location = new_path
 
 
 base = BaseGUI()
