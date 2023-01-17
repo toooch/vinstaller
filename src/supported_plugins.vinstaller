@@ -1,3 +1,4 @@
 Jotunn,https://github.com/Valheim-Modding/Jotunn/releases/latest/download/Jotunn.dll
 FarmGrid,https://github.com/repos/toooch/vinstaller/contents/plugins/FarmGrid.dll
-ValheimRAFT,https://github.com/repos/toooch/vinstaller/contents/plugins/ValheimRAFT.dll,Jotunn
+ValheimRAFT,https://github.com/repos/toooch/vinstaller/contents/plugins/ValheimRAFT.dll,Jotunn,Assets
+Assets,https://github.com/repos/toooch/vinstaller/contents/plugins/Assets
